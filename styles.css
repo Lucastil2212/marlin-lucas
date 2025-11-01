@@ -2112,6 +2112,17 @@ svg line {
     }
 }
 
+@keyframes rainFall {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(510px);
+        opacity: 0.3;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .artist-name {
