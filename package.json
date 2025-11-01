@@ -1,0 +1,20 @@
+{
+  "name": "marlin-lucas-music-player",
+  "version": "1.0.0",
+  "description": "Marlín Lucas Music Player with SVG Animations",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["music", "player", "svg", "animations"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "stripe": "^14.21.0",
+    "dotenv": "^16.4.5",
+    "body-parser": "^1.20.2",
+    "fs-extra": "^11.2.0"
+  }
+}

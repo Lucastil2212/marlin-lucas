@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Marlín Lucas - Music Player</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <!-- Animated SVG Background Elements -->
+    <div class="svg-background">
+        <svg class="bg-svg-1" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF9500;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#FFC857;stop-opacity:0.1" />
+                </linearGradient>
+                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFC857;stop-opacity:0.2" />
+                    <stop offset="100%" style="stop-color:#FF9500;stop-opacity:0.05" />
+                </linearGradient>
+            </defs>
+            <!-- Animated paths -->
+            <path class="bg-path-1" d="M0,200 Q300,100 600,200 T1200,200" fill="none" stroke="url(#grad1)" stroke-width="3" opacity="0.4"/>
+            <path class="bg-path-2" d="M0,400 Q300,300 600,400 T1200,400" fill="none" stroke="url(#grad2)" stroke-width="3" opacity="0.3"/>
+            <path class="bg-path-3" d="M0,600 Q300,500 600,600 T1200,600" fill="none" stroke="url(#grad1)" stroke-width="3" opacity="0.4"/>
+        </svg>
+    </div>
+    
+    <!-- Floating SVG Particles -->
+    <div class="floating-particles" id="floating-particles"></div>
+    
+    <div class="container">
+        <header>
+            <div class="artist-image-container">
+                <img src="download_upscaled (2) (1).png" alt="Marlín Lucas" class="artist-image">
+                <div class="image-glow"></div>
+            </div>
+            <h1 class="artist-name">Marlín Lucas</h1>
+            <p class="subtitle">Virtual Music Experience</p>
+            <div class="header-controls">
+                <button id="shuffle-btn" class="shuffle-btn" title="Shuffle & Play">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 3 21 3 21 8"></polyline>
+                        <line x1="4" y1="20" x2="21" y2="3"></line>
+                        <polyline points="21 16 21 21 16 21"></polyline>
+                        <line x1="15" y1="15" x2="21" y2="21"></line>
+                        <line x1="4" y1="4" x2="9" y2="9"></line>
+                    </svg>
+                    <span>Shuffle</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Visualizer Section - Top Priority -->
+        <div class="visualizer-section">
+            <div class="animation-container" id="animation-container">
+                <!-- SVG animations will be injected here -->
+            </div>
+            <div class="visualizer-overlay" id="visualizer-overlay">
+                <div class="visualizer-info">
+                    <h2 id="visualizer-track-name">Select a song to begin</h2>
+                    <div class="visualizer-controls">
+                        <button id="visualizer-prev-btn" class="visualizer-btn">⏮</button>
+                        <button id="visualizer-play-pause-btn" class="visualizer-btn visualizer-play-pause">▶</button>
+                        <button id="visualizer-next-btn" class="visualizer-btn">⏭</button>
+                        <button id="exit-fullscreen-btn" class="visualizer-btn exit-btn">✕</button>
+                    </div>
+                    <div class="visualizer-time">
+                        <span id="visualizer-current-time">0:00</span> / <span id="visualizer-total-time">0:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="player-section">
+            <div class="now-playing">
+                <div class="track-info">
+                    <h2 id="current-track">Select a song</h2>
+                    <div class="track-time-share">
+                        <p id="current-time">0:00</p>
+                        <button id="share-btn" class="share-btn" title="Share this song">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                <polyline points="16 6 12 2 8 6"></polyline>
+                                <line x1="12" y1="2" x2="12" y2="15"></line>
+                            </svg>
+                            Share
+                        </button>
+                        <p id="total-time">0:00</p>
+                    </div>
+                    <div id="share-notification" class="share-notification">
+                        <svg class="check-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Link copied to clipboard! 🎵</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button id="prev-btn" class="control-btn">⏮</button>
+                    <button id="play-pause-btn" class="control-btn play-pause">▶</button>
+                    <button id="next-btn" class="control-btn">⏭</button>
+                </div>
+
+                <div class="progress-container">
+                    <input type="range" id="progress-bar" min="0" max="100" value="0" class="progress-bar">
+                    <div class="volume-control">
+                        <span>🔊</span>
+                        <input type="range" id="volume-bar" min="0" max="100" value="70" class="volume-bar">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download & Purchase Section -->
+        <div class="download-section-wrapper">
+            <div class="download-section">
+                <h4>Download Music</h4>
+                <p class="availability-notice">🎵 <strong>WAV files, Lyrics, and Stems Available Soon!</strong> 🎵</p>
+                <p class="availability-subtext">Pre-order now and get notified when downloads are ready</p>
+                
+                <div class="download-buttons">
+                    <button id="download-single-btn" class="download-btn single-download">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <div class="download-btn-content">
+                            <span class="download-title">Single Song</span>
+                            <span class="download-price">$5.00</span>
+                            <span class="download-includes">WAV + Lyrics + Stems (Coming Soon)</span>
+                        </div>
+                    </button>
+                    <button id="download-full-btn" class="download-btn full-download">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <div class="download-btn-content">
+                            <span class="download-title">Full Album Package</span>
+                            <span class="download-price">$10.00</span>
+                            <span class="download-includes">All Songs (WAV + Lyrics + Stems) Coming Soon</span>
+                        </div>
+                    </button>
+                </div>
+                
+                <div id="lyrics-stems-signup" class="lyrics-stems-signup">
+                    <p class="signup-text">📧 Enter your email to be notified when downloads are ready:</p>
+                    <form id="email-signup-form" class="email-signup-form">
+                        <input type="email" id="email-input" class="email-input" placeholder="your.email@example.com" required>
+                        <button type="submit" class="email-submit-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 2 11 13 2 22 7 22 11 13 22 7 22 2"></polyline>
+                            </svg>
+                            Notify Me
+                        </button>
+                    </form>
+                    <div id="email-notification" class="email-notification"></div>
+                </div>
+                
+                <div class="donation-section">
+                    <button id="donate-btn" class="donate-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <div class="donate-btn-content">
+                            <span class="donate-title">Support Marlín Lucas</span>
+                            <span class="donate-subtitle">Donate Directly to the Artist</span>
+                        </div>
+                    </button>
+                </div>
+                
+                <div id="payment-issue-section" class="payment-issue-section">
+                    <p class="payment-issue-title">Get in Touch</p>
+                    <p class="payment-issue-text">Have questions or want to reach out? Send us a message:</p>
+                    <form id="payment-issue-form" class="email-signup-form">
+                        <input type="email" id="payment-issue-email" class="email-input" placeholder="your.email@example.com" required>
+                        <button type="submit" class="email-submit-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 2 11 13 2 22 7 22 11 13 22 7 22 2"></polyline>
+                            </svg>
+                            Send Message
+                        </button>
+                    </form>
+                    <div id="payment-issue-notification" class="email-notification"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="playlist-section">
+            <h3>Playlist</h3>
+            <div class="playlist" id="playlist">
+                <!-- Playlist items will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player" preload="metadata"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
