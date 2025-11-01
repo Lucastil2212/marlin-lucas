@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "rename-lyrics": "node rename-lyrics.js",
+    "create-lyrics": "node create-lyrics-files.js"
   },
   "keywords": ["music", "player", "svg", "animations"],
   "author": "",

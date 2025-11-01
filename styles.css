@@ -1,3 +1,6 @@
+/* Better readable font for lyrics - clear and theme-appropriate */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -1793,7 +1796,7 @@ header::before {
 .playlist-section h3 {
     font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     text-align: center;
     color: #CC6B00; /* Darker orange for readability */
     text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8),
@@ -1802,6 +1805,27 @@ header::before {
     letter-spacing: 3px;
     position: relative;
     z-index: 2;
+}
+
+.album-label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    color: #B8590A;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 240, 220, 0.5) 100%);
+    border-radius: 15px;
+    display: inline-block;
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(255, 200, 87, 0.3);
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .playlist {
@@ -2412,5 +2436,672 @@ svg line {
         width: 85px;
         height: 85px;
         font-size: 2.2rem;
+    }
+}
+
+/* Lyrics Modal Styles - Completely isolated from all animations */
+.lyrics-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+    /* Remove backdrop-filter which can cause visual artifacts */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10001 !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s linear !important;
+    padding: 1rem !important;
+    /* Safe area insets for mobile */
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+    /* Prevent any movement - force static positioning */
+    transform: translateZ(0) !important;
+    will-change: opacity !important;
+    /* Prevent inheriting any animations from parents */
+    animation: none !important;
+    /* Isolate from parent transforms */
+    isolation: isolate !important;
+    contain: layout style paint !important;
+}
+
+.lyrics-modal.show {
+    opacity: 1 !important;
+    pointer-events: all !important;
+    /* Keep completely static after showing - absolutely no movement */
+    transform: translateZ(0) !important;
+    animation: none !important;
+    transition: opacity 0.15s linear !important;
+    /* Override any parent transforms or animations */
+    top: 0 !important;
+    left: 0 !important;
+    /* Prevent any inherited styles */
+    will-change: auto !important;
+}
+
+.lyrics-modal-content {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 240, 220, 0.95) 100%) !important;
+    border-radius: 25px !important;
+    width: 100% !important;
+    max-width: 700px !important;
+    max-height: 90vh !important;
+    max-height: 90dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 20px 60px rgba(255, 149, 0, 0.5),
+                0 0 40px rgba(255, 200, 87, 0.4) !important;
+    border: 3px solid rgba(255, 200, 87, 0.6) !important;
+    overflow: hidden !important;
+    /* Keep modal completely still - absolutely no animations, transitions, or transforms */
+    animation: none !important;
+    transition: none !important;
+    transform: translateZ(0) !important;
+    will-change: auto !important;
+    /* Prevent any transforms or movements */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    transform-style: flat !important;
+    /* Force static position */
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    /* Isolate from parent */
+    isolation: isolate !important;
+    contain: layout style paint !important;
+}
+
+.lyrics-modal.show .lyrics-modal-content {
+    /* Ensure absolutely no animations after opening - completely static */
+    transform: translateZ(0) !important;
+    animation: none !important;
+    transition: none !important;
+    /* Explicitly prevent any movement */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+}
+
+.lyrics-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid rgba(255, 200, 87, 0.3);
+    background: linear-gradient(135deg, #FF9500 0%, #FFB84D 100%);
+    position: relative;
+}
+
+.lyrics-modal-header h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    flex: 1;
+    /* Ensure title wraps on small screens */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-width: 0; /* Allow flex item to shrink */
+}
+
+.lyrics-close-btn {
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.lyrics-close-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lyrics-close-btn svg {
+    stroke: white;
+    stroke-width: 2.5;
+}
+
+.lyrics-modal-body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 2rem !important;
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 149, 0, 0.5) rgba(255, 200, 87, 0.2);
+    /* Keep body completely still - only allow user scrolling */
+    animation: none !important;
+    transform: translateZ(0) !important;
+    will-change: scroll-position !important;
+    /* Smooth scrolling only for user interaction */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent any transforms or animations */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    transition: none !important;
+    /* Force static positioning */
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    /* Isolate from parent */
+    isolation: isolate !important;
+    contain: layout style paint !important;
+    /* Ensure content fits within viewport */
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.lyrics-modal-body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.lyrics-modal-body::-webkit-scrollbar-track {
+    background: rgba(255, 149, 0, 0.1);
+    border-radius: 10px;
+}
+
+.lyrics-modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #FF9500, #FFC857);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(255, 149, 0, 0.5);
+}
+
+.lyrics-modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #FFC857, #FF9500);
+}
+
+.lyrics-content {
+    color: #4A2C1A !important;
+    line-height: 1.9 !important;
+    font-size: 1.15rem !important;
+    font-weight: 400 !important;
+    text-align: left !important;
+    /* Use Inter or Roboto for excellent readability while fitting the modern theme */
+    font-family: 'Inter', 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    /* Keep text completely still - no animations or transforms */
+    animation: none !important;
+    transform: translateZ(0) !important;
+    will-change: auto !important;
+    /* Improve readability */
+    letter-spacing: 0.02em !important;
+    /* Prevent any movement */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    transition: none !important;
+    position: relative !important;
+    /* Force static - no movement at all */
+    top: 0 !important;
+    left: 0 !important;
+    /* Isolate completely */
+    isolation: isolate !important;
+    contain: layout style paint !important;
+    /* Ensure text wraps properly on mobile */
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.lyrics-loading {
+    text-align: center;
+    color: #8B4513;
+    font-style: italic;
+    padding: 2rem;
+}
+
+.lyrics-not-found {
+    text-align: center;
+    color: #8B4513;
+    font-style: italic;
+    padding: 2rem;
+}
+
+.lyrics-section {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #CC6B00;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 2px rgba(255, 200, 87, 0.3);
+    font-family: 'Inter', 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    /* Keep sections completely still */
+    animation: none !important;
+    transform: translateZ(0);
+    /* Prevent any movement */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: none !important;
+    position: relative;
+}
+
+.lyrics-line {
+    margin-bottom: 0.6rem;
+    padding: 0.25rem 0;
+    font-family: 'Inter', 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    /* Keep lines completely still for easy reading */
+    animation: none !important;
+    transform: translateZ(0);
+    will-change: auto;
+    /* Allow text selection for easy reading */
+    user-select: text;
+    -webkit-user-select: text;
+    /* Better readability */
+    color: #3A1F0A;
+    /* Prevent any movement or transforms */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: none !important;
+    position: relative;
+    /* Ensure text wraps on mobile */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.lyrics-line-empty {
+    height: 0.8rem;
+}
+
+.lyrics-btn {
+    background: linear-gradient(135deg, #FFC857 0%, #FF9500 100%);
+}
+
+.lyrics-btn:hover {
+    background: linear-gradient(135deg, #FF9500 0%, #FFC857 100%);
+}
+
+/* Responsive Lyrics Modal - Mobile fixes to prevent movement */
+@media (max-width: 768px) {
+    .lyrics-modal {
+        padding: 0 !important;
+        /* Lock position completely on mobile - no flex centering that can cause movement */
+        display: block !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        /* Use fixed pixel values to prevent viewport changes */
+        max-width: 100% !important;
+        max-height: 100% !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        /* Prevent any movement from viewport changes */
+        position: fixed !important;
+        transform: none !important;
+        translate: none !important;
+        /* Prevent scroll from affecting modal */
+        overscroll-behavior: none !important;
+        -webkit-overflow-scrolling: none !important;
+        /* Disable touch actions that might cause movement */
+        touch-action: none !important;
+    }
+    
+    .lyrics-modal.show {
+        /* Lock in place on mobile - absolutely no movement */
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: opacity 0.15s linear !important;
+    }
+    
+    .lyrics-modal-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        /* Use 100% instead of vh to prevent viewport bar movement */
+        max-height: 100% !important;
+        height: 100% !important;
+        border-radius: 0 !important;
+        /* Lock position absolutely - no flex centering */
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        /* Disable any potential transforms */
+        will-change: auto !important;
+        /* Ensure content fits within viewport */
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .lyrics-modal-header {
+        padding: 1rem 1.5rem !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .lyrics-modal-header h2 {
+        font-size: 1.3rem !important;
+        transform: none !important;
+        animation: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        min-width: 0 !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .lyrics-close-btn {
+        width: 36px !important;
+        height: 36px !important;
+        position: relative !important;
+        transform: none !important;
+        translate: none !important;
+    }
+    
+    .lyrics-modal-body {
+        padding: 1.5rem !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        /* Prevent scroll from moving modal */
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        /* Ensure content fits within viewport */
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    .lyrics-content {
+        font-size: 1rem !important;
+        line-height: 1.6 !important;
+        position: relative !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    
+    .lyrics-section {
+        font-size: 0.9rem !important;
+        margin-top: 1rem !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .lyrics-line {
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .lyrics-modal {
+        /* Extra aggressive locking for small screens - no flex centering */
+        display: block !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        touch-action: none !important;
+    }
+    
+    .lyrics-modal-content {
+        border-radius: 0 !important;
+        max-height: 100% !important;
+        height: 100% !important;
+        width: 100% !important;
+        /* Lock absolutely in place - no flex centering */
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        will-change: auto !important;
+        /* Ensure content fits within viewport */
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .lyrics-modal-header {
+        padding: 0.8rem 1rem !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .lyrics-modal-header h2 {
+        font-size: 1.1rem !important;
+        transform: none !important;
+        animation: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        min-width: 0 !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .lyrics-close-btn {
+        width: 32px !important;
+        height: 32px !important;
+        transform: none !important;
+        translate: none !important;
+    }
+    
+    .lyrics-modal-body {
+        padding: 1rem !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        /* Ensure content fits within viewport */
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    .lyrics-content {
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .lyrics-modal {
+        /* Lock in landscape too - no flex centering */
+        display: block !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        transform: none !important;
+        translate: none !important;
+        touch-action: none !important;
+    }
+    
+    .lyrics-modal-content {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        max-height: 100% !important;
+        height: 100% !important;
+        width: 100% !important;
+        animation: none !important;
+        transition: none !important;
+        will-change: auto !important;
+        /* Ensure content fits within viewport */
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .lyrics-modal-header {
+        padding: 0.8rem 1rem !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .lyrics-modal-header h2 {
+        font-size: 1.1rem !important;
+        transform: none !important;
+        animation: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        min-width: 0 !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .lyrics-modal-body {
+        padding: 0.8rem !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        /* Ensure content fits within viewport */
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    .lyrics-content {
+        font-size: 0.9rem !important;
+        line-height: 1.4 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+        transition: none !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
     }
 }

@@ -1,44 +1,62 @@
-// Music files list
-const musicFiles = [
-    'chingon-full-album/¿Dónde estaban los policías_ (Remastered).wav',
-    'chingon-full-album/As Fast As You Can Go, As High As You Can Go (Remastered).wav',
-    'chingon-full-album/Berlín (Remastered).wav',
-    'chingon-full-album/Brisa (Remastered).wav',
-    'chingon-full-album/CHILL (Remastered).wav',
-    'chingon-full-album/Chingón (Remastered).wav',
-    'chingon-full-album/Corrido para cantar (Remastered).wav',
-    'chingon-full-album/De nuevo tropiezo (Remastered).wav',
-    'chingon-full-album/Desaparecer (Remastered).wav',
-    'chingon-full-album/Destruir el Sistema (Remastered).wav',
-    'chingon-full-album/El León (Remastered).wav',
-    'chingon-full-album/En el rancho (Remastered).wav',
-    'chingon-full-album/Estambul Turquía (Remastered).wav',
-    'chingon-full-album/Harmonizing at the Campfire (Remastered).wav',
-    'chingon-full-album/India (Remastered).wav',
-    'chingon-full-album/Invierno (Remastered).wav',
-    'chingon-full-album/Lluvia (Remastered).wav',
-    'chingon-full-album/Look at Me Now (Remastered).wav',
-    'chingon-full-album/Loving You Is Easy (Remastered).wav',
-    'chingon-full-album/Me ahogo en alcohol (Remastered).wav',
-    'chingon-full-album/Mi religión (Remastered).wav',
-    'chingon-full-album/Nunca Olvidaré Aquella Noche (Remastered).wav',
-    'chingon-full-album/Nunca vuelvo a California (Remastered).wav',
-    'chingon-full-album/Odio cuando no estás aquí (Remastered).wav',
-    'chingon-full-album/Paysundú (Remastered).wav',
-    'chingon-full-album/Pecadores (Remastered).wav',
-    'chingon-full-album/Si el cielo cae (Remastered).wav',
-    'chingon-full-album/Siempre traigo cruz (Remastered).wav',
-    'chingon-full-album/Soy Quien Soy (Remastered).wav',
-    'chingon-full-album/Te Dejo Mi Amor (Remastered).wav',
-    'chingon-full-album/Un Beso Más Antes de Irme (Remastered).wav',
-    'chingon-full-album/You Lost My Trust (Remastered).wav'
-];
+// Albums structure - organized for future expansion
+const albums = {
+    'chingon': {
+        name: 'Chingon',
+        songs: [
+            'chingon-full-album/los policías (Remastered).wav',
+            'chingon-full-album/FAST! (Remastered).wav',
+            'chingon-full-album/Berlín (Remastered).wav',
+            'chingon-full-album/Brisa (Remastered).wav',
+            'chingon-full-album/CHILL (Remastered).wav',
+            'chingon-full-album/Chingón (Remastered).wav',
+            'chingon-full-album/Corrido para cantar (Remastered).wav',
+            'chingon-full-album/De nuevo tropiezo (Remastered).wav',
+            'chingon-full-album/Desaparecer (Remastered).wav',
+            'chingon-full-album/Destruir el Sistema (Remastered).wav',
+            'chingon-full-album/El León (Remastered).wav',
+            'chingon-full-album/En el rancho (Remastered).wav',
+            'chingon-full-album/Estambul Turquía (Remastered).wav',
+            'chingon-full-album/Halloween (Remastered).wav',
+            'chingon-full-album/Harmonizing at the Campfire (Remastered).wav',
+            'chingon-full-album/India (Remastered).wav',
+            'chingon-full-album/Invierno (Remastered).wav',
+            'chingon-full-album/Lluvia (Remastered).wav',
+            'chingon-full-album/Look at Me Now (Remastered).wav',
+            'chingon-full-album/Loving You Is Easy (Remastered).wav',
+            'chingon-full-album/Me ahogo en alcohol (Remastered).wav',
+            'chingon-full-album/Mi religión (Remastered).wav',
+            'chingon-full-album/Nunca Olvidaré Aquella Noche (Remastered).wav',
+            'chingon-full-album/Nunca vuelvo a California (Remastered).wav',
+            'chingon-full-album/Odio cuando no estás aquí (Remastered).wav',
+            'chingon-full-album/Paysundú (Remastered).wav',
+            'chingon-full-album/Pecadores (Remastered).wav',
+            'chingon-full-album/Si el cielo cae (Remastered).wav',
+            'chingon-full-album/Siempre traigo cruz (Remastered).wav',
+            'chingon-full-album/Soy Quien Soy (Remastered).wav',
+            'chingon-full-album/Te Dejo Mi Amor (Remastered).wav',
+            'chingon-full-album/Un Beso Más Antes de Irme (Remastered).wav',
+            'chingon-full-album/Trust (Remastered).wav'
+        ]
+    }
+};
+
+// Get flat list of all music files for backward compatibility
+const musicFiles = albums.chingon.songs;
+
+// Get current album (default to chingon)
+let currentAlbum = 'chingon';
 
 // Get song name from file path
 function getSongName(filePath) {
     const parts = filePath.split('/');
     const fileName = parts[parts.length - 1];
     return fileName.replace(' (Remastered).wav', '').replace('.wav', '');
+}
+
+// Get lyrics file path for a song
+function getLyricsPath(filePath) {
+    const songName = getSongName(filePath);
+    return `chingon-full-album/lyrics/${songName} (Remastered).txt`;
 }
 
 // Audio player setup
@@ -72,14 +90,21 @@ const visualizerTotalTime = document.getElementById('visualizer-total-time');
 const visualizerPrevBtn = document.getElementById('visualizer-prev-btn');
 const visualizerPlayPauseBtn = document.getElementById('visualizer-play-pause-btn');
 const visualizerNextBtn = document.getElementById('visualizer-next-btn');
+const visualizerLyricsBtn = document.getElementById('visualizer-lyrics-btn');
 const exitFullscreenBtn = document.getElementById('exit-fullscreen-btn');
 const shuffleBtn = document.getElementById('shuffle-btn');
+const lyricsBtn = document.getElementById('lyrics-btn');
+const lyricsModal = document.getElementById('lyrics-modal');
+const lyricsCloseBtn = document.getElementById('lyrics-close-btn');
+const lyricsContent = document.getElementById('lyrics-content');
+const lyricsTitle = document.getElementById('lyrics-title');
 
 let currentTrackIndex = 0;
 let stripe = null;
 let stripePublishableKey = null;
 let isPlaying = false;
 let isFullscreen = false;
+let currentLyrics = null;
 
 // Audio visualizer removed - using static CSS animations only
 
@@ -176,6 +201,246 @@ function hexToRgb(hex) {
     } : null;
 }
 
+// Load lyrics for a song
+async function loadLyrics(songIndex) {
+    if (songIndex < 0 || songIndex >= musicFiles.length) return null;
+    
+    const track = musicFiles[songIndex];
+    const lyricsPath = getLyricsPath(track);
+    
+    try {
+        const response = await fetch(lyricsPath);
+        if (response.ok) {
+            const text = await response.text();
+            return text.trim() || null;
+        }
+    } catch (error) {
+        console.error('Error loading lyrics:', error);
+    }
+    return null;
+}
+
+// Display lyrics modal
+async function showLyrics() {
+    // Show loading state
+    lyricsContent.innerHTML = '<div class="lyrics-loading">Loading lyrics...</div>';
+    lyricsModal.classList.add('show');
+    
+    // Mobile-specific: Lock body scroll and viewport
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        // Prevent body scroll completely on mobile
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.height = '100%';
+        document.body.style.top = '0';
+        document.body.style.left = '0';
+        // Prevent iOS bounce scroll
+        document.body.style.touchAction = 'none';
+    } else {
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Force modal to be completely static - no animations or movement
+    // Apply styles directly to override any CSS
+    lyricsModal.style.animation = 'none';
+    lyricsModal.style.transition = 'opacity 0.15s linear';
+    lyricsModal.style.transform = 'none';
+    lyricsModal.style.translate = 'none';
+    lyricsModal.style.backdropFilter = 'none';
+    lyricsModal.style.webkitBackdropFilter = 'none';
+    
+    // Mobile-specific fixes to prevent viewport movement (isMobile already declared above)
+    if (isMobile) {
+        // Remove flex centering which can cause movement on mobile
+        lyricsModal.style.display = 'block';
+        lyricsModal.style.alignItems = 'stretch';
+        lyricsModal.style.justifyContent = 'flex-start';
+        // Lock modal position completely on mobile
+        lyricsModal.style.position = 'fixed';
+        lyricsModal.style.top = '0';
+        lyricsModal.style.left = '0';
+        lyricsModal.style.right = '0';
+        lyricsModal.style.bottom = '0';
+        lyricsModal.style.width = '100%';
+        lyricsModal.style.height = '100%';
+        lyricsModal.style.padding = '0';
+        lyricsModal.style.margin = '0';
+        lyricsModal.style.touchAction = 'none';
+        // Prevent scroll from affecting position
+        lyricsModal.style.overscrollBehavior = 'none';
+    }
+    
+    const modalContent = lyricsModal.querySelector('.lyrics-modal-content');
+    if (modalContent) {
+        modalContent.style.animation = 'none';
+        modalContent.style.transition = 'none';
+        modalContent.style.transform = 'none';
+        modalContent.style.translate = 'none';
+        modalContent.style.willChange = 'auto';
+        
+        if (isMobile) {
+            // Lock content position on mobile - fixed position, no transforms
+            modalContent.style.position = 'fixed';
+            modalContent.style.top = '0';
+            modalContent.style.left = '0';
+            modalContent.style.right = '0';
+            modalContent.style.bottom = '0';
+            modalContent.style.margin = '0';
+            modalContent.style.padding = '0';
+            modalContent.style.maxHeight = '100%';
+            modalContent.style.height = '100%';
+            modalContent.style.width = '100%';
+            modalContent.style.borderRadius = '0';
+            // Absolutely no transforms on mobile
+            modalContent.style.transform = 'none';
+            modalContent.style.translate = 'none';
+        } else {
+            modalContent.style.top = 'auto';
+            modalContent.style.left = 'auto';
+            modalContent.style.right = 'auto';
+            modalContent.style.bottom = 'auto';
+        }
+    }
+    
+    const modalBody = lyricsModal.querySelector('.lyrics-modal-body');
+    if (modalBody) {
+        modalBody.style.animation = 'none';
+        modalBody.style.transition = 'none';
+        modalBody.style.transform = 'none';
+        modalBody.style.translate = 'none';
+        modalBody.style.top = '0';
+        modalBody.style.left = '0';
+        if (isMobile) {
+            modalBody.style.overscrollBehavior = 'contain';
+            modalBody.style.position = 'relative';
+        }
+    }
+    
+    const lyricsContentEl = lyricsModal.querySelector('.lyrics-content');
+    if (lyricsContentEl) {
+        lyricsContentEl.style.animation = 'none';
+        lyricsContentEl.style.transition = 'none';
+        lyricsContentEl.style.transform = 'none';
+        lyricsContentEl.style.translate = 'none';
+    }
+    
+    // Force a reflow on mobile to ensure styles are applied
+    if (isMobile) {
+        void lyricsModal.offsetHeight;
+        if (modalContent) void modalContent.offsetHeight;
+    }
+    
+    // Prevent viewport resize from moving modal on mobile
+    if (isMobile) {
+        const preventViewportMovement = () => {
+            if (lyricsModal.classList.contains('show')) {
+                lyricsModal.style.top = '0';
+                lyricsModal.style.left = '0';
+                if (modalContent) {
+                    modalContent.style.top = '0';
+                    modalContent.style.left = '0';
+                }
+            }
+        };
+        
+        // Throttle viewport resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(preventViewportMovement, 50);
+        }, { passive: true });
+        
+        // Prevent scroll from moving modal
+        window.addEventListener('scroll', (e) => {
+            if (lyricsModal.classList.contains('show')) {
+                window.scrollTo(0, 0);
+            }
+        }, { passive: false });
+    }
+    
+    try {
+        const lyrics = await loadLyrics(currentTrackIndex);
+        const songName = getSongName(musicFiles[currentTrackIndex]);
+        
+        lyricsTitle.textContent = songName;
+        
+        if (lyrics) {
+            // Format lyrics with line breaks - use textContent for security and performance
+            const container = document.createElement('div');
+            
+            lyrics.split('\n').forEach(line => {
+                const div = document.createElement('div');
+                // Style section headers (lines starting with [)
+                if (line.trim().startsWith('[') && line.trim().endsWith(']')) {
+                    div.className = 'lyrics-section';
+                    div.textContent = line;
+                } else if (line.trim() === '') {
+                    // Empty lines for spacing
+                    div.className = 'lyrics-line-empty';
+                } else {
+                    div.className = 'lyrics-line';
+                    div.textContent = line;
+                }
+                container.appendChild(div);
+            });
+            
+            lyricsContent.innerHTML = '';
+            lyricsContent.appendChild(container);
+            currentLyrics = lyrics;
+            
+            // Scroll to top when lyrics load (one-time, instant, no animations)
+            requestAnimationFrame(() => {
+                const modalBody = lyricsModal.querySelector('.lyrics-modal-body');
+                if (modalBody) {
+                    // Temporarily disable smooth scrolling for instant scroll
+                    const originalBehavior = modalBody.style.scrollBehavior;
+                    modalBody.style.scrollBehavior = 'auto';
+                    modalBody.scrollTop = 0;
+                    // Restore smooth scrolling for user interaction
+                    setTimeout(() => {
+                        modalBody.style.scrollBehavior = originalBehavior || '';
+                    }, 0);
+                }
+            });
+        } else {
+            lyricsContent.innerHTML = '<div class="lyrics-not-found">Lyrics not available for this song.</div>';
+            currentLyrics = null;
+        }
+    } catch (error) {
+        console.error('Error showing lyrics:', error);
+        lyricsContent.innerHTML = '<div class="lyrics-not-found">Error loading lyrics. Please try again.</div>';
+        currentLyrics = null;
+    }
+}
+
+// Hide lyrics modal
+function hideLyrics() {
+    lyricsModal.classList.remove('show');
+    
+    // Restore body styles (especially important on mobile)
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.touchAction = '';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+// Escape HTML to prevent XSS (keeping for backward compatibility, but using textContent in showLyrics for better performance)
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 // Load track
 function loadTrack(index) {
     if (index < 0 || index >= musicFiles.length) return;
@@ -184,6 +449,9 @@ function loadTrack(index) {
     const track = musicFiles[index];
     audioPlayer.src = track;
     currentTrack.textContent = getSongName(track);
+    
+    // Clear lyrics when track changes
+    currentLyrics = null;
     
     // Update URL for sharing
     updateURLHash(index);
@@ -396,10 +664,17 @@ function createAnimation(index) {
     // Clear element data cache when creating new animation
     elementData = new WeakMap();
     
-    // Each song gets a unique virtual world experience
-    // Map each song to its own animation for a truly unique experience
-    const funcIndex = index % animationFunctions.length;
-    const svg = animationFunctions[funcIndex](index);
+    // Check if this is Halloween song - give it special visualizer
+    const songName = getSongName(musicFiles[index]);
+    let svg;
+    if (songName.toLowerCase() === 'halloween') {
+        svg = createHalloween(index);
+    } else {
+        // Each song gets a unique virtual world experience
+        // Map each song to its own animation for a truly unique experience
+        const funcIndex = index % animationFunctions.length;
+        svg = animationFunctions[funcIndex](index);
+    }
     
     // Simplified: Use CSS for sizing, only set essential properties once
     if (!svg.getAttribute('viewBox')) {
@@ -436,8 +711,11 @@ function createAnimation(index) {
         if (resizeTimeout) clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             ensureSVGSize(svg);
-        }, 100); // Throttle to max once per 100ms
+        }, 150); // Throttle to max once per 150ms for better performance
     };
+    
+    // Store handler reference for cleanup
+    svg._resizeHandler = handleResize;
     
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('orientationchange', handleResize, { passive: true });
@@ -446,11 +724,16 @@ function createAnimation(index) {
     const oldSvg = animationContainer.querySelector('.virtual-world-svg');
     if (oldSvg) {
         // Remove old event listeners and clear cache to prevent memory leaks
+        if (oldSvg._resizeHandler) {
+            window.removeEventListener('resize', oldSvg._resizeHandler);
+            window.removeEventListener('orientationchange', oldSvg._resizeHandler);
+        }
         oldSvg._cachedElements = null;
         oldSvg._updateOffset = null;
         oldSvg._updateOffset2 = null;
         oldSvg._skipFrame = null;
         oldSvg._updateLimit = null;
+        oldSvg._resizeHandler = null;
     }
     
     // Clear container and WeakMap to prevent memory leaks
@@ -1306,6 +1589,197 @@ function createEnergyWaves(index) {
     return svg;
 }
 
+function createHalloween(index) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 800 500');
+    
+    // Halloween color palette - oranges, purples, dark reds
+    const halloweenColors = [
+        '#FF6B35', // Bright orange
+        '#F7931E', // Pumpkin orange
+        '#8B4513', // Brown
+        '#4B0082', // Indigo
+        '#800080', // Purple
+        '#DC143C', // Crimson
+        '#FF8C00', // Dark orange
+        '#2F0A28'  // Dark purple
+    ];
+    
+    function getHalloweenColor(i) {
+        return halloweenColors[i % halloweenColors.length];
+    }
+    
+    // Moon in background
+    const moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    moon.setAttribute('cx', '650');
+    moon.setAttribute('cy', '80');
+    moon.setAttribute('r', '60');
+    moon.setAttribute('fill', '#FFE5B4');
+    moon.setAttribute('opacity', '0.9');
+    moon.style.filter = 'drop-shadow(0 0 30px rgba(255, 229, 180, 0.8))';
+    moon.style.animation = 'float3D 15s ease-in-out infinite';
+    svg.appendChild(moon);
+    
+    // Bats flying around
+    for (let i = 0; i < 12; i++) {
+        const bat = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const x = Math.random() * 800;
+        const y = Math.random() * 400 + 50;
+        
+        // Simple bat shape (symmetric)
+        const size = 8 + Math.random() * 6;
+        const d = `M ${x} ${y} 
+                   Q ${x - size} ${y - size * 0.8} ${x - size * 1.5} ${y}
+                   Q ${x - size} ${y + size * 0.8} ${x} ${y}
+                   M ${x} ${y}
+                   Q ${x + size} ${y - size * 0.8} ${x + size * 1.5} ${y}
+                   Q ${x + size} ${y + size * 0.8} ${x} ${y}
+                   L ${x} ${y + size * 1.2}
+                   L ${x - size * 0.3} ${y + size * 1.5}
+                   L ${x} ${y + size * 1.2}
+                   L ${x + size * 0.3} ${y + size * 1.5}
+                   Z`;
+        
+        bat.setAttribute('d', d);
+        bat.setAttribute('fill', '#1a0d1a');
+        bat.setAttribute('stroke', '#4B0082');
+        bat.setAttribute('stroke-width', '1.5');
+        bat.setAttribute('opacity', '0.8');
+        bat.style.animation = `batFly ${4 + Math.random() * 3}s ease-in-out infinite`;
+        bat.style.animationDelay = `${Math.random() * 2}s`;
+        bat.style.transformOrigin = `${x}px ${y}px`;
+        svg.appendChild(bat);
+    }
+    
+    // Pumpkins scattered
+    for (let i = 0; i < 8; i++) {
+        const pumpkinX = 50 + (i % 4) * 200;
+        const pumpkinY = 350 + Math.floor(i / 4) * 100;
+        
+        // Pumpkin body
+        const pumpkin = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        pumpkin.setAttribute('cx', pumpkinX);
+        pumpkin.setAttribute('cy', pumpkinY);
+        pumpkin.setAttribute('rx', '35');
+        pumpkin.setAttribute('ry', '40');
+        pumpkin.setAttribute('fill', getHalloweenColor(i * 2));
+        pumpkin.setAttribute('opacity', '0.9');
+        pumpkin.setAttribute('stroke', '#FF8C00');
+        pumpkin.setAttribute('stroke-width', '2');
+        pumpkin.style.filter = 'drop-shadow(0 0 10px rgba(255, 107, 53, 0.6))';
+        pumpkin.style.animation = `pumpkinGlow ${3 + i * 0.3}s ease-in-out infinite`;
+        svg.appendChild(pumpkin);
+        
+        // Pumpkin stem
+        const stem = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        stem.setAttribute('x', pumpkinX - 5);
+        stem.setAttribute('y', pumpkinY - 45);
+        stem.setAttribute('width', '10');
+        stem.setAttribute('height', '15');
+        stem.setAttribute('fill', '#4B0082');
+        stem.setAttribute('opacity', '0.9');
+        svg.appendChild(stem);
+        
+        // Pumpkin face - left eye (triangle)
+        const eye1 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        eye1.setAttribute('points', `${pumpkinX - 12},${pumpkinY - 10} ${pumpkinX - 8},${pumpkinY - 5} ${pumpkinX - 12},${pumpkinY}`);
+        eye1.setAttribute('fill', '#000');
+        svg.appendChild(eye1);
+        
+        // Right eye
+        const eye2 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        eye2.setAttribute('points', `${pumpkinX + 12},${pumpkinY - 10} ${pumpkinX + 8},${pumpkinY - 5} ${pumpkinX + 12},${pumpkinY}`);
+        eye2.setAttribute('fill', '#000');
+        svg.appendChild(eye2);
+        
+        // Mouth
+        const mouth = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const mouthPoints = `M ${pumpkinX - 15} ${pumpkinY + 10} 
+                            Q ${pumpkinX - 10} ${pumpkinY + 20} ${pumpkinX} ${pumpkinY + 18}
+                            Q ${pumpkinX + 10} ${pumpkinY + 20} ${pumpkinX + 15} ${pumpkinY + 10}
+                            Q ${pumpkinX + 12} ${pumpkinY + 12} ${pumpkinX} ${pumpkinY + 15}
+                            Q ${pumpkinX - 12} ${pumpkinY + 12} ${pumpkinX - 15} ${pumpkinY + 10} Z`;
+        mouth.setAttribute('d', mouthPoints);
+        mouth.setAttribute('fill', '#000');
+        svg.appendChild(mouth);
+    }
+    
+    // Ghosts floating
+    for (let i = 0; i < 10; i++) {
+        const ghost = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const gx = 100 + (i % 5) * 140;
+        const gy = 100 + Math.floor(i / 5) * 150;
+        
+        // Ghost shape with wavy bottom
+        const ghostPath = `M ${gx} ${gy}
+                          Q ${gx - 20} ${gy - 30} ${gx - 25} ${gy - 15}
+                          L ${gx - 20} ${gy + 30}
+                          Q ${gx - 15} ${gy + 35} ${gx - 10} ${gy + 32}
+                          Q ${gx - 5} ${gy + 35} ${gx} ${gy + 32}
+                          Q ${gx + 5} ${gy + 35} ${gx + 10} ${gy + 32}
+                          Q ${gx + 15} ${gy + 35} ${gx + 20} ${gy + 30}
+                          L ${gx + 25} ${gy - 15}
+                          Q ${gx + 20} ${gy - 30} ${gx} ${gy}
+                          Z`;
+        
+        ghost.setAttribute('d', ghostPath);
+        ghost.setAttribute('fill', '#F0F0F0');
+        ghost.setAttribute('opacity', '0.85');
+        ghost.setAttribute('stroke', '#C0C0C0');
+        ghost.setAttribute('stroke-width', '1.5');
+        ghost.style.filter = 'drop-shadow(0 0 15px rgba(240, 240, 240, 0.7))';
+        ghost.style.animation = `ghostFloat ${5 + Math.random() * 3}s ease-in-out infinite`;
+        ghost.style.animationDelay = `${Math.random() * 2}s`;
+        svg.appendChild(ghost);
+        
+        // Ghost eyes
+        const eye1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        eye1.setAttribute('cx', gx - 8);
+        eye1.setAttribute('cy', gy - 5);
+        eye1.setAttribute('r', '3');
+        eye1.setAttribute('fill', '#000');
+        svg.appendChild(eye1);
+        
+        const eye2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        eye2.setAttribute('cx', gx + 8);
+        eye2.setAttribute('cy', gy - 5);
+        eye2.setAttribute('r', '3');
+        eye2.setAttribute('fill', '#000');
+        svg.appendChild(eye2);
+    }
+    
+    // Spooky stars/twinkles
+    for (let i = 0; i < 40; i++) {
+        const star = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        star.setAttribute('cx', Math.random() * 800);
+        star.setAttribute('cy', Math.random() * 300);
+        star.setAttribute('r', '2');
+        star.setAttribute('fill', getHalloweenColor(i));
+        star.setAttribute('opacity', '0.8');
+        star.style.filter = 'drop-shadow(0 0 5px rgba(255, 107, 53, 0.8))';
+        star.style.animation = `starTwinkle ${1 + Math.random() * 2}s ease-in-out infinite`;
+        star.style.animationDelay = `${Math.random() * 2}s`;
+        svg.appendChild(star);
+    }
+    
+    // Spooky mist/fog at bottom
+    for (let i = 0; i < 15; i++) {
+        const mist = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        const rx = 60 + Math.random() * 40;
+        mist.setAttribute('cx', (i * 50) + Math.random() * 30);
+        mist.setAttribute('cy', 480 + Math.random() * 20);
+        mist.setAttribute('rx', rx);
+        mist.setAttribute('ry', '20');
+        mist.setAttribute('fill', '#4B0082');
+        mist.setAttribute('opacity', '0.3');
+        mist.style.animation = `mistFloat ${4 + Math.random() * 3}s ease-in-out infinite`;
+        mist.style.animationDelay = `${Math.random() * 2}s`;
+        svg.appendChild(mist);
+    }
+    
+    return svg;
+}
+
 // Add CSS animations dynamically
 const style = document.createElement('style');
 style.textContent = `
@@ -1434,6 +1908,29 @@ style.textContent = `
     @keyframes meshPulse {
         0%, 100% { opacity: 0.6; }
         50% { opacity: 1; }
+    }
+    @keyframes batFly {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        25% { transform: translate(-30px, -20px) rotate(-15deg); }
+        50% { transform: translate(-10px, -40px) rotate(0deg); }
+        75% { transform: translate(30px, -20px) rotate(15deg); }
+    }
+    @keyframes ghostFloat {
+        0%, 100% { transform: translateY(0) translateX(0); opacity: 0.85; }
+        33% { transform: translateY(-15px) translateX(10px); opacity: 0.95; }
+        66% { transform: translateY(-10px) translateX(-10px); opacity: 0.9; }
+    }
+    @keyframes pumpkinGlow {
+        0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.6)); opacity: 0.9; }
+        50% { filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.9)); opacity: 1; }
+    }
+    @keyframes mistFloat {
+        0%, 100% { transform: translateX(0) translateY(0); opacity: 0.3; }
+        50% { transform: translateX(20px) translateY(-10px); opacity: 0.5; }
+    }
+    @keyframes starTwinkle {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
     }
 `;
 document.head.appendChild(style);
@@ -2332,6 +2829,11 @@ exitFullscreenBtn.addEventListener('click', (e) => {
     exitFullscreen();
 });
 
+visualizerLyricsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showLyrics();
+});
+
 // Show overlay on mouse move in fullscreen
 let hideOverlayTimeout;
 visualizerSection.addEventListener('mousemove', () => {
@@ -2401,6 +2903,36 @@ shuffleBtn.addEventListener('click', async () => {
     setTimeout(() => {
         shuffleBtn.style.transform = '';
     }, 600);
+});
+
+// Lyrics button functionality
+if (lyricsBtn) {
+    lyricsBtn.addEventListener('click', () => {
+        showLyrics();
+    });
+}
+
+// Close lyrics modal
+if (lyricsCloseBtn) {
+    lyricsCloseBtn.addEventListener('click', () => {
+        hideLyrics();
+    });
+}
+
+// Close lyrics modal on backdrop click
+if (lyricsModal) {
+    lyricsModal.addEventListener('click', (e) => {
+        if (e.target === lyricsModal) {
+            hideLyrics();
+        }
+    });
+}
+
+// Close lyrics modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lyricsModal && lyricsModal.classList.contains('show')) {
+        hideLyrics();
+    }
 });
 
 // Initialize Stripe on load

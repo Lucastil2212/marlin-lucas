@@ -13,11 +13,59 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// Serve music files with proper MIME type
+// Serve music files with proper MIME type and handle special characters (¿, ?, accents, etc.)
+app.use('/chingon-full-album', (req, res, next) => {
+    try {
+        // Decode the URL to handle special characters (¿, ?, accented letters, etc.)
+        let decodedPath = decodeURIComponent(req.path);
+        
+        // Remove leading slash if present
+        if (decodedPath.startsWith('/')) {
+            decodedPath = decodedPath.substring(1);
+        }
+        
+        const filePath = path.join(__dirname, 'chingon-full-album', decodedPath);
+        
+        // Security: ensure file is within the chingon-full-album directory
+        const albumDir = path.join(__dirname, 'chingon-full-album');
+        const resolvedPath = path.resolve(filePath);
+        const resolvedDir = path.resolve(albumDir);
+        
+        if (!resolvedPath.startsWith(resolvedDir)) {
+            return res.status(403).send('Forbidden');
+        }
+        
+        // Check if file exists
+        if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isFile()) {
+            // Check if it's a lyrics file
+            if (decodedPath.includes('/lyrics/') || decodedPath.endsWith('.txt')) {
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+            } else {
+                res.setHeader('Content-Type', 'audio/wav');
+                res.setHeader('Content-Disposition', 'inline');
+                res.setHeader('Accept-Ranges', 'bytes');
+            }
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.sendFile(resolvedPath);
+        } else {
+            // File not found - try next middleware
+            next();
+        }
+    } catch (error) {
+        // If decoding fails, try next middleware
+        console.error('Error serving file:', error.message);
+        next();
+    }
+});
+
+// Fallback to express.static for other files
 app.use('/chingon-full-album', express.static(path.join(__dirname, 'chingon-full-album'), {
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.wav')) {
             res.setHeader('Content-Type', 'audio/wav');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Accept-Ranges', 'bytes');
         }
     }
 }));
@@ -299,42 +347,51 @@ app.get('/api/download/:paymentId', async (req, res) => {
     }
 });
 
-// Get music files list
+// Albums structure - must match script.js exactly
+const albums = {
+    'chingon': {
+        name: 'Chingon',
+        songs: [
+            'chingon-full-album/los policías (Remastered).wav',
+            'chingon-full-album/FAST! (Remastered).wav',
+            'chingon-full-album/Berlín (Remastered).wav',
+            'chingon-full-album/Brisa (Remastered).wav',
+            'chingon-full-album/CHILL (Remastered).wav',
+            'chingon-full-album/Chingón (Remastered).wav',
+            'chingon-full-album/Corrido para cantar (Remastered).wav',
+            'chingon-full-album/De nuevo tropiezo (Remastered).wav',
+            'chingon-full-album/Desaparecer (Remastered).wav',
+            'chingon-full-album/Destruir el Sistema (Remastered).wav',
+            'chingon-full-album/El León (Remastered).wav',
+            'chingon-full-album/En el rancho (Remastered).wav',
+            'chingon-full-album/Estambul Turquía (Remastered).wav',
+            'chingon-full-album/Halloween (Remastered).wav',
+            'chingon-full-album/Harmonizing at the Campfire (Remastered).wav',
+            'chingon-full-album/India (Remastered).wav',
+            'chingon-full-album/Invierno (Remastered).wav',
+            'chingon-full-album/Lluvia (Remastered).wav',
+            'chingon-full-album/Look at Me Now (Remastered).wav',
+            'chingon-full-album/Loving You Is Easy (Remastered).wav',
+            'chingon-full-album/Me ahogo en alcohol (Remastered).wav',
+            'chingon-full-album/Mi religión (Remastered).wav',
+            'chingon-full-album/Nunca Olvidaré Aquella Noche (Remastered).wav',
+            'chingon-full-album/Nunca vuelvo a California (Remastered).wav',
+            'chingon-full-album/Odio cuando no estás aquí (Remastered).wav',
+            'chingon-full-album/Paysundú (Remastered).wav',
+            'chingon-full-album/Pecadores (Remastered).wav',
+            'chingon-full-album/Si el cielo cae (Remastered).wav',
+            'chingon-full-album/Siempre traigo cruz (Remastered).wav',
+            'chingon-full-album/Soy Quien Soy (Remastered).wav',
+            'chingon-full-album/Te Dejo Mi Amor (Remastered).wav',
+            'chingon-full-album/Un Beso Más Antes de Irme (Remastered).wav',
+            'chingon-full-album/Trust (Remastered).wav'
+        ]
+    }
+};
+
+// Get music files list - returns flat list for backward compatibility
 function getMusicFiles() {
-    return [
-        'chingon-full-album/¿Dónde estaban los policías_ (Remastered).wav',
-        'chingon-full-album/As Fast As You Can Go, As High As You Can Go (Remastered).wav',
-        'chingon-full-album/Berlín (Remastered).wav',
-        'chingon-full-album/Brisa (Remastered).wav',
-        'chingon-full-album/CHILL (Remastered).wav',
-        'chingon-full-album/Chingón (Remastered).wav',
-        'chingon-full-album/Corrido para cantar (Remastered).wav',
-        'chingon-full-album/De nuevo tropiezo (Remastered).wav',
-        'chingon-full-album/Desaparecer (Remastered).wav',
-        'chingon-full-album/Destruir el Sistema (Remastered).wav',
-        'chingon-full-album/El León (Remastered).wav',
-        'chingon-full-album/En el rancho (Remastered).wav',
-        'chingon-full-album/Estambul Turquía (Remastered).wav',
-        'chingon-full-album/Harmonizing at the Campfire (Remastered).wav',
-        'chingon-full-album/India (Remastered).wav',
-        'chingon-full-album/Invierno (Remastered).wav',
-        'chingon-full-album/Lluvia (Remastered).wav',
-        'chingon-full-album/Look at Me Now (Remastered).wav',
-        'chingon-full-album/Loving You Is Easy (Remastered).wav',
-        'chingon-full-album/Me ahogo en alcohol (Remastered).wav',
-        'chingon-full-album/Mi religión (Remastered).wav',
-        'chingon-full-album/Nunca Olvidaré Aquella Noche (Remastered).wav',
-        'chingon-full-album/Nunca vuelvo a California (Remastered).wav',
-        'chingon-full-album/Odio cuando no estás aquí (Remastered).wav',
-        'chingon-full-album/Paysundú (Remastered).wav',
-        'chingon-full-album/Pecadores (Remastered).wav',
-        'chingon-full-album/Si el cielo cae (Remastered).wav',
-        'chingon-full-album/Siempre traigo cruz (Remastered).wav',
-        'chingon-full-album/Soy Quien Soy (Remastered).wav',
-        'chingon-full-album/Te Dejo Mi Amor (Remastered).wav',
-        'chingon-full-album/Un Beso Más Antes de Irme (Remastered).wav',
-        'chingon-full-album/You Lost My Trust (Remastered).wav'
-    ];
+    return albums.chingon.songs;
 }
 
 // Start server
